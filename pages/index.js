@@ -1,11 +1,6 @@
 import Nav from "../components/nav";
-import GetMostViewed from "../lib/most_view";
-import { useState } from "react";
 
-export default function IndexPage() {
-  const [period, setPeriod] = useState(7);
-  const { data, error } = GetMostViewed(period);
-
+export default function IndexPage({ data }) {
   return (
     <div className="bg-gray-800 text-yellow-100  font-serif">
       <Nav />
@@ -27,4 +22,15 @@ export default function IndexPage() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const url = `https://api.nytimes.com/svc/mostpopular/v2/viewed/7.json?api-key=Vz3KC0COeUrinuX55cuggBltjgI0IILa`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return {
+    props: {
+      data: data,
+    }, // will be passed to the page component as props
+  };
 }
